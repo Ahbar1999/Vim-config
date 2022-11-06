@@ -1,4 +1,5 @@
 -- nvim config main file 
+-- lets fucking learn lua and fuck around with vim no ?
 
 border = string.rep("*", 10)
 --print("\n\n")
