@@ -54,26 +54,20 @@ inoremap <leader>b  <esc>bi
 nnoremap <leader>pfn <esc>:echo expand('%:t')<cr>
 
 " SOME AUTOCOMMAND SETTINGS
-" Note that <localleader> does not work in FileType based autocmds!
 " Comment Shortcuts
-autocmd FileType javascript inoremap <buffer> <leader>cc I//<esc>
-autocmd FileType python     nnoremap <buffer> <leader>cc I#<esc>
-autocmd FileType python     nnoremap <buffer> <leader>cu I<esc>x<esc>
+augroup comment_group
+	autocmd FileType javascript inoremap <buffer> <leader>cc I//<esc>
+	autocmd FileType python     nnoremap <buffer> <leader>cc I#<esc>
+	autocmd FileType python     nnoremap <buffer> <leader>cu I<esc>x<esc>
+	" Go to the start of the line and comment and uncomment it 
+	autocmd FileType rust	    inoremap <buffer> <leader>cc I//<esc>
+	autocmd FileType rust 	    inoremap <buffer> <leader>cu ^xxi<esc>
+augroup END
 
-" Go to the start of the line and comment and uncomment it 
-autocmd FileType rust	    inoremap <buffer> <leader>cc I//<esc>
-autocmd FileType rust 	    inoremap <buffer> <leader>cu ^xxi<esc>
 
 " fn stores stores the filename without extensions
 let fn = expand('%:t:r')
 
-" Run program shortcuts
-" Generate commands from strings with execute/exec command and execute them
-" with <cr>
-" exec introduces single whitespace be default between its arguments 
-autocmd FileType python inoremap <buffer> <F5> <esc>:w<cr>:exec "!python" fn.".py"<cr>
-autocmd FileType python nnoremap <buffer> <F5> :w<cr>:exec "!python" fn.".py"<cr>
-" Compile Shortcuts for Kotlin
 function SetKotlinState(filename)
 	echo "In a kotlin file"
 	let b:compileCmdDotKt = "!kotlinc"." ".a:filename.".kt"." "."-include-runtime -d"." ".a:filename.".jar"
@@ -82,12 +76,29 @@ function SetKotlinState(filename)
 	nnoremap <buffer> <leader>rp :execute(b:runCmdDotKt)<cr>
 endfunction
 
-if expand('%:e') == 'kt' 
-	call SetKotlinState(fn)
-endif
 
-autocmd FileType python :iabbrev <buffer> iff if:<left>
-autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+augroup compile_run_group
+	" Run program shortcuts
+	" Generate commands from strings with execute/exec command and execute them
+	" with <cr>
+	" exec introduces single whitespace be default between its arguments 
+	autocmd FileType python inoremap <buffer> <F5> <esc>:w<cr>:exec "!python" fn.".py"<cr>
+	autocmd FileType python nnoremap <buffer> <F5> :w<cr>:exec "!python" fn.".py"<cr>		
+	" Compile Shortcuts for Kotlin
+	autocmd FileType kotlin call SetKotlinState(fn)
+augroup END
+
+
+" if expand('%:e') == 'kt' 
+"	call SetKotlinState(fn)
+" endif
+
+augroup abbreviations
+	autocmd FileType python iabbrev <buffer> iff if:<left>
+	autocmd FileType python	iabbrev <buffer> forloop for i in range(n):<cr>	
+	autocmd FileType python iabbrev <buffer> nameequalsmain if __name__ == '__main__':<cr>
+	autocmd FileType javascript iabbrev <buffer> iff if ()<left>
+augroup END
 
 
 "START PLUG-IN MANAGER SETTINGS
