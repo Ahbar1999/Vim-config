@@ -24,7 +24,6 @@ echo "Hello, Ahbar\n\r
 set number
 set relativenumber
 
-
 " Mapping keyboard bindings
 
 " referenced by <leader>
@@ -47,32 +46,40 @@ nnoremap <c-e> :vsplit<cr><esc>:execute('Explore')<cr>
 " after entering it
 nnoremap <leader>ovr :e $MYVIMRC<cr>
 nnoremap <leader>ev  :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv  :source $MYVIMRC<cr>
+nnoremap <leader>sv  :source $MYVIMRC<cr><cr>:e<cr>
 " Split window vertically and open the command prompt in one buffer 
 nnoremap <leader>ot :vsplit<cr><esc>:terminal<cr>i 
 inoremap <leader>e  <esc>eli
 inoremap <leader>b  <esc>bi
-nnoremap <localleader>pfn <esc>:echo expand('%:t')<cr>
+nnoremap <leader>pfn <esc>:echo expand('%:t')<cr>
 
 " SOME AUTOCOMMAND SETTINGS
-"
+" Note that <localleader> does not work in FileType based autocmds!
 " Comment Shortcuts
-autocmd FileType javascript nnoremap <buffer> <localleader>c I//<esc>
-autocmd FileType python     nnoremap <buffer> <localleader>c I#<esc>
+autocmd FileType javascript inoremap <buffer> <leader>cc I//<esc>
+autocmd FileType python     nnoremap <buffer> <leader>cc I#<esc>
+autocmd FileType python     nnoremap <buffer> <leader>cu I<esc>x<esc>
+
 " Go to the start of the line and comment and uncomment it 
-autocmd FileType rust	    nnoremap <buffer> <localleader>c ^i//<esc>
-autocmd FileType rust 	    nnoremap <buffer> <localleader>cu ^xxi<esc>
+autocmd FileType rust	    inoremap <buffer> <leader>cc I//<esc>
+autocmd FileType rust 	    inoremap <buffer> <leader>cu ^xxi<esc>
 
 " fn stores stores the filename without extensions
 let fn = expand('%:t:r')
 
+" Run program shortcuts
+" Generate commands from strings with execute/exec command and execute them
+" with <cr>
+" exec introduces single whitespace be default between its arguments 
+autocmd FileType python inoremap <buffer> <F5> <esc>:w<cr>:exec "!python" fn.".py"<cr>
+autocmd FileType python nnoremap <buffer> <F5> :w<cr>:exec "!python" fn.".py"<cr>
 " Compile Shortcuts for Kotlin
 function SetKotlinState(filename)
 	echo "In a kotlin file"
 	let b:compileCmdDotKt = "!kotlinc"." ".a:filename.".kt"." "."-include-runtime -d"." ".a:filename.".jar"
 	let b:runCmdDotKt = "!java -jar"." ".a:filename.".jar"
-	nnoremap <buffer> <localleader>cp :execute(b:compileCmdDotKt)<cr>
-	nnoremap <buffer> <localleader>rp :execute(b:runCmdDotKt)<cr>
+	nnoremap <buffer> <leader>cp :execute(b:compileCmdDotKt)<cr>
+	nnoremap <buffer> <leader>rp :execute(b:runCmdDotKt)<cr>
 endfunction
 
 if expand('%:e') == 'kt' 
