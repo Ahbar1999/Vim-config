@@ -3,7 +3,6 @@ lua require('config')
 " Use (:execute 'edit' luaFile) to edit the lua config
 let luaFile = "~/AppData/Local/nvim/lua/config/init.lua"
 
-" This is a oneline comment
 " Print some greeting messages 
 echo "(^ - ^)/"
 
@@ -56,12 +55,12 @@ nnoremap <leader>pfn <esc>:echo expand('%:t')<cr>
 " SOME AUTOCOMMAND SETTINGS
 " Comment Shortcuts
 augroup comment_group
-	autocmd FileType javascript inoremap <buffer> <leader>cc I//<esc>
+	autocmd FileType javascript nnoremap <buffer> <leader>cc I//<esc>
 	autocmd FileType python     nnoremap <buffer> <leader>cc I#<esc>
 	autocmd FileType python     nnoremap <buffer> <leader>cu I<esc>x<esc>
 	" Go to the start of the line and comment and uncomment it 
-	autocmd FileType rust	    inoremap <buffer> <leader>cc I//<esc>
-	autocmd FileType rust 	    inoremap <buffer> <leader>cu ^xxi<esc>
+	autocmd FileType rust	    nnoremap <buffer> <leader>cc I//<esc>
+	autocmd FileType rust 	    nnoremap <buffer> <leader>cu ^xxi<esc>
 augroup END
 
 
@@ -79,17 +78,23 @@ endfunction
 
 augroup compile_run_group
 	" Run program shortcuts
-	" Generate commands from strings with execute/exec command and execute them
-	" with <cr>
+	" Generate commands from strings with execute/exec command and execute
+	" them all in one go
 	" exec introduces single whitespace be default between its arguments 
-	autocmd FileType python inoremap <buffer> <F5> <esc>:w<cr>:exec "!python" fn.".py"<cr>
-	autocmd FileType python nnoremap <buffer> <F5> :w<cr>:exec "!python" fn.".py"<cr>		
+	autocmd FileType python inoremap <buffer> <F5> <esc>:w<cr>:exec "!python" fn.".py"
+	autocmd FileType python nnoremap <buffer> <F5> :w<cr>:exec "!python" fn.".py"		
+	autocmd FileType rust nnoremap <buffer> <F5> :w<cr>:exec "!cargo run" fn.".rs"	
 	" Compile Shortcuts for Kotlin
 	autocmd FileType kotlin call SetKotlinState(fn)
+	" Compile Shortcuts for Scala
+	" scalac compiles and scala compiles and executes
+	autocmd FileType scala inoremap <buffer> <F5> <esc>:w<cr>:exec "!scala" fn.".scala"
+	autocmd FileType scala nnoremap <buffer> <F5> :w<cr>:exec "!scala" fn.".scala"
+	" autocmd BufWrite *.scala echo 'scala file written'
 augroup END
 
 
-" if expand('%:e') == 'kt' 
+"if expand('%:e') == 'kt' 
 "	call SetKotlinState(fn)
 " endif
 
@@ -97,6 +102,7 @@ augroup abbreviations
 	autocmd FileType python iabbrev <buffer> iff if:<left>
 	autocmd FileType python	iabbrev <buffer> forloop for i in range(n):<cr>	
 	autocmd FileType python iabbrev <buffer> nameequalsmain if __name__ == '__main__':<cr>
+	autocmd FileType python iabbrev <buffer> nameismain if __name__ == '__main__':<cr>	
 	autocmd FileType javascript iabbrev <buffer> iff if ()<left>
 augroup END
 
