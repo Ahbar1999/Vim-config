@@ -1,5 +1,3 @@
-" Load the lua files in config folder and execute them
-lua require('config')
 " Use (:execute 'edit' luaFile) to edit the lua config
 let luaFile = "~/AppData/Local/nvim/lua/config/init.lua"
 
@@ -22,7 +20,9 @@ echo "Hello, Ahbar\n\r
 " Setting some editor variables
 set number
 set relativenumber
-
+set ts=4
+set sw=4
+set autoindent
 " Mapping keyboard bindings
 
 " referenced by <leader>
@@ -46,6 +46,7 @@ nnoremap <c-e> :vsplit<cr><esc>:execute('Explore')<cr>
 nnoremap <leader>ovr :e $MYVIMRC<cr>
 nnoremap <leader>ev  :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv  :source $MYVIMRC<cr><cr>:e<cr>
+nnoremap <leader>olua :execute 'edit' luaFile<cr>
 " Split window vertically and open the command prompt in one buffer 
 nnoremap <leader>ot :vsplit<cr><esc>:terminal<cr>i 
 inoremap <leader>e  <esc>eli
@@ -91,6 +92,10 @@ augroup compile_run_group
 	autocmd FileType scala inoremap <buffer> <F5> <esc>:w<cr>:exec "!scala" fn.".scala"
 	autocmd FileType scala nnoremap <buffer> <F5> :w<cr>:exec "!scala" fn.".scala"
 	" autocmd BufWrite *.scala echo 'scala file written'
+	
+	" Compile/Build shortcuts for cpp
+	autocmd FileType cpp inoremap <buffer> <F5> <esc>:w<cr>:exec "!g++" fn.".cpp -o" fn	
+	autocmd FileType cpp nnoremap <buffer> <F5> :w<cr>:exec "!g++" fn.".cpp -o" fn
 augroup END
 
 
@@ -110,6 +115,9 @@ augroup END
 "START PLUG-IN MANAGER SETTINGS
 call plug#begin('~/.vim/plugged')
 
+" lsp config
+Plug 'neovim/nvim-lspconfig'
+" Plug 'neovim/nvim-lspconfig'
 " Make sure you use single quotes
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align'
@@ -127,10 +135,12 @@ Plug 'udalov/kotlin-vim'
 " RUST Plugins
 Plug 'rust-lang/rust.vim'
 
-
-
 call plug#end()
 "END PLUG-IN MANAGER SETTINGS
+
+" Load the lua files in config folder and execute them
+lua require('config')
+
 " syntax enable
 " set background=dark
 colorscheme gruvbox 

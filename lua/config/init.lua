@@ -1,5 +1,7 @@
 -- nvim config main file 
 -- lets fucking learn lua and fuck around with vim no ?
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.tsserver.setup{}
 
 border = string.rep("*", 10)
 empty_line = string.rep(" ", 10)
