@@ -1,4 +1,6 @@
 " Use (:execute 'edit' luaFile) to edit the lua config
+" Moved lua import at the bottom become all the imports in lua need to be
+" after 'plug#end'
 let luaFile = "~/AppData/Local/nvim/lua/config/init.lua"
 
 " Print some greeting messages 
